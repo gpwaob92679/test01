@@ -41,14 +41,14 @@ jobs:
           ref: info
           token: ${{ secrets.PAT }}
       - name: Generate information JSON files (changes)
-        if: needs.clone.output.changes_detected  == 'true'
-        run: python generate_info.py -c ${{ needs.clone.output.now }}
+        if: needs.clone.outputs.changes_detected  == 'true'
+        run: python generate_info.py -c ${{ needs.clone.outputs.now }}
       - name: Generate information JSON files (no changes)
-        if: needs.clone.output.changes_detected  == 'false'
-        run: python generate_info.py ${{ needs.clone.output.now }}
+        if: needs.clone.outputs.changes_detected  == 'false'
+        run: python generate_info.py ${{ needs.clone.outputs.now }}
       - name: Commit to repository
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: ${{ format('[{0}] Update latest clone information', needs.clone.output.now) }}
+          commit_message: ${{ format('[{0}] Update latest clone information', needs.clone.outputs.now) }}
           file_pattern: '*.json'
  
