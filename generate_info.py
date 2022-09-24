@@ -19,29 +19,29 @@ def dump_timestamp(args) -> None:
         json.dump(timestamp_dict, f, indent=2)
 
 
-def dump_change(args) -> None:
-    change_dict = {
+def dump_changes(args) -> None:
+    changes_dict = {
         'schemaVersion': 1,
         'label': 'Changes since last clone',
-        'message': 'Yes' if args.change else 'No',
-        'color': 'orange' if args.change else 'lightgrey',
+        'message': 'Yes' if args.changes else 'No',
+        'color': 'orange' if args.changes else 'lightgrey',
         'logoSvg': DIFF_SVG,
         'style': 'flat',
         'cacheSeconds': 300,
     }
-    with open('change.json', 'w', encoding='utf-8') as f:
-        json.dump(change_dict, f, indent=2)
+    with open('changes.json', 'w', encoding='utf-8') as f:
+        json.dump(changes_dict, f, indent=2)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('timestamp', type=str)
-    parser.add_argument('-c', '--change', action='store_true')
+    parser.add_argument('-c', '--changes', action='store_true')
     args = parser.parse_args()
     print(args)
 
     dump_timestamp(args)
-    dump_change(args)
+    dump_changes(args)
 
 
 if __name__ == '__main__':

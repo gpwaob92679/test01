@@ -1,0 +1,54 @@
+name: Clone website
+
+on:
+  schedule:
+    - cron: '0 4,16 * * *'  # 04:00 and 16:00 UTC every day
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  clone:    
+    runs-on: ubuntu-latest
+    output:
+      now: ${{ steps.get-time.outputs.now }}
+      changes_detected: ${{ steps.auto-commit.outputs.changes_detected }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
+      - name: Run wget
+        run: wget --config=.wgetrc --content-on-error -L https://mathweb.math.ncu.edu.tw/calc/
+        continue-on-error: true
+      - name: Get current time
+        id: get-time
+        run: echo "::set-output name=now::"$(date -Iseconds)""
+      - name: Commit to repository
+        id: auto-commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ format('[{0}] Automatic clone website changes', steps.time.outputs.now) }}
+          file_pattern: '*.html *.pdf'
+  generate-info:
+    runs-on: ubuntu-latest
+    needs: clone
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: info
+          token: ${{ secrets.PAT }}
+      - name: Generate information JSON files (changes)
+        if: ${{ needs.clone.output.changes_detected  == 'true' }}
+        run: python generate_info.py -c ${{ needs.clone.output.now }}
+      - name: Generate information JSON files (no changes)
+        if: ${{ needs.clone.output.changes_detected  == 'false' }}
+        run: python generate_info.py ${{ needs.clone.output.now }}
+      - name: Commit to repository
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ format('[{0}] Update latest clone information', needs.clone.output.now }}
+          file_pattern: '*.json'
+ 
