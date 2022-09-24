@@ -50,5 +50,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ format('[{0}] Update latest clone information', needs.clone.outputs.now) }}
+          branch: info
           file_pattern: '*.json'
  
