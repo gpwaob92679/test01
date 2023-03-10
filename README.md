@@ -16,8 +16,8 @@ content.
 
 ## h2
 
-> test quote
-> with
-> multiple
-> lines
+> test quote  
+> with  
+> multiple  
+> lines  
 
