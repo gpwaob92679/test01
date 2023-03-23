@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '0 4,16 * * *'  # 04:00 and 16:00 UTC every day
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - gp_test
+      
 
 jobs:
   clone:
