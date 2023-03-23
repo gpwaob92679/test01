@@ -21,6 +21,8 @@ jobs:
           timezone: Asia/Taipei
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
       # - name: Run wget
         # run: wget --config=.wgetrc --content-on-error -L https://mathweb.math.ncu.edu.tw/calc/
         # continue-on-error: true
