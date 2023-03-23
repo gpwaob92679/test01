@@ -1,12 +1,9 @@
-name: Clone website
+name: Clone Website
 
 on:
   schedule:
     - cron: '0 4,16 * * *'  # 04:00 and 16:00 UTC every day
   workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
   clone:
