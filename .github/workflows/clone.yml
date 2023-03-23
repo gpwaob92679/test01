@@ -26,7 +26,7 @@ jobs:
         id: get-time
         run: echo "name=now::"$(date -Iseconds)"" >> $GITHUB_OUTPUT
       - name: Generate test file
-        run: date -Iseconds > ${{ $steps.get-time.outputs.now }}.txt
+        run: date -Iseconds > ${{ steps.get-time.outputs.now }}.txt
       - name: Commit to repository
         id: auto-commit
         uses: stefanzweifel/git-auto-commit-action@v4
