@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   clone:
@@ -21,8 +21,6 @@ jobs:
           timezone: Asia/Taipei
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT }}
       - name: Run wget
         run: wget --config=.wgetrc --content-on-error -L https://mathweb.math.ncu.edu.tw/calc/
         continue-on-error: true
@@ -43,7 +41,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: badge
-          token: ${{ secrets.PAT }}
       - name: Generate JSONs for badges (changes detected)
         if: needs.clone.outputs.changes_detected  == 'true'
         run: python generate_badge_json.py -c ${{ needs.clone.outputs.now }}
