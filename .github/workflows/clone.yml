@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   clone:
@@ -15,41 +15,44 @@ jobs:
       now: ${{ steps.get-time.outputs.now }}
       changes_detected: ${{ steps.auto-commit.outputs.changes_detected }}
     steps:
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Taipei
       - name: Checkout
         uses: actions/checkout@v3
-      # - name: Run wget
-      #  run: wget --config=.wgetrc --content-on-error -L https://mathweb.math.ncu.edu.tw/calc/
-      #  continue-on-error: true
+        with:
+          token: ${{ secrets.PAT }}
+      - name: Run wget
+        run: wget --config=.wgetrc --content-on-error -L https://mathweb.math.ncu.edu.tw/calc/
+        continue-on-error: true
       - name: Get current time
         id: get-time
         run: echo "now="$(date -Iseconds)"" >> $GITHUB_OUTPUT
-      - name: Generate test file
-        run: date -Iseconds > ${{ steps.get-time.outputs.now }}.txt
       - name: Commit to repository
         id: auto-commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: ${{ format('[{0}] Automatic clone website changes', steps.get-time.outputs.now) }}
-          file_pattern: '*.txt'
-  generate-info:
+          commit_message: ${{ format('[{0}] Automatic clone', steps.get-time.outputs.now) }}
+          file_pattern: '*.html *.pdf *.png'
+  generate-badge-json:
     runs-on: ubuntu-latest
     needs: clone
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: info
+          ref: badge
           token: ${{ secrets.PAT }}
-      - name: Generate information JSON files (changes)
+      - name: Generate JSONs for badges (changes detected)
         if: needs.clone.outputs.changes_detected  == 'true'
-        run: python generate_info.py -c ${{ needs.clone.outputs.now }}
-      - name: Generate information JSON files (no changes)
+        run: python generate_badge_json.py -c ${{ needs.clone.outputs.now }}
+      - name: Generate JSONs for badges (NO changes detected)
         if: needs.clone.outputs.changes_detected  == 'false'
-        run: python generate_info.py ${{ needs.clone.outputs.now }}
+        run: python generate_badge_json.py ${{ needs.clone.outputs.now }}
       - name: Commit to repository
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ format('[{0}] Update latest clone information', needs.clone.outputs.now) }}
-          branch: info
+          branch: badge
           file_pattern: '*.json'
- 
