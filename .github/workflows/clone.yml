@@ -17,14 +17,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT }}
       # - name: Run wget
       #  run: wget --config=.wgetrc --content-on-error -L https://mathweb.math.ncu.edu.tw/calc/
       #  continue-on-error: true
       - name: Get current time
         id: get-time
-        run: echo "name=now::"$(date -Iseconds)"" >> $GITHUB_OUTPUT
+        run: echo "now="$(date -Iseconds)"" >> $GITHUB_OUTPUT
       - name: Generate test file
         run: date -Iseconds > ${{ steps.get-time.outputs.now }}.txt
       - name: Commit to repository
