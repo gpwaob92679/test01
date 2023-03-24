@@ -38,7 +38,7 @@ jobs:
         with:
           repository: 'gpwaob92679/test02'
           ref: 'main'
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.HUGO_DEPLOY_TOKEN }}
           submodules: recursive
       - name: Setup Pages
         id: pages
