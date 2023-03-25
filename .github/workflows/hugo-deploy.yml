@@ -1,5 +1,5 @@
 name: Deploy Hugo Site to Pages
-run-name: Deployment triggered by ${{ github.event.client_payload.run_name }}
+run-name: ${{ github.event.client_payload.run_name }}
 
 on:
   repository_dispatch:
