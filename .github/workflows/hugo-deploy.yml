@@ -1,5 +1,5 @@
 name: Deploy Hugo Site to Pages
-run-name: Deployment trigger by \"${{ github.event.client_payload.github.event_name }}\"
+run-name: Deployment triggered by ${{ jobs.report-info.outputs.run-name }}
 
 on:
   repository_dispatch:
@@ -11,11 +11,28 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  SOURCE_REPO: gpwaob92679/gpwaob92679.github.io-src
+
 concurrency:
   group: 'pages'
   cancel-in-progress: true
 
 jobs:
+  report-info:
+    runs-on: ubuntu-latest
+    outputs:
+      run-name: ${{ steps.get-run.outputs.run-name }}
+    steps:
+      - name: Get workflow run for source repository
+        id: get-run
+        if: github.event_name == 'repository_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: run_name= \
+               $(gh repos/${{github.event.client_payload.github.repository}}/actions/runs/${{github.event.client_payload.github.run_id}} \
+               | jq '.name')
+               && echo "run-name="${run_name}"" >> $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest
     env:
@@ -30,7 +47,7 @@ jobs:
       - name: Checkout source repository
         uses: actions/checkout@v3
         with:
-          repository: gpwaob92679/gpwaob92679.github.io-src
+          repository: ${SOURCE_REPO}
           ref: main
           token: ${{ secrets.PAT }}
           submodules: recursive
@@ -45,8 +62,8 @@ jobs:
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: hugo \
-             --minify \
-             --baseURL "${{ steps.pages.outputs.base_url }}/"
+               --minify \
+               --baseURL "${{ steps.pages.outputs.base_url }}/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
