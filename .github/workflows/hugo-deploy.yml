@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 env:
-  SOURCE_REPO: gpwaob92679/test02
+  SOURCE_REPOSITORY: gpwaob92679/test02
 
 concurrency:
   group: 'pages'
@@ -33,9 +33,9 @@ jobs:
       - name: Checkout source repository
         uses: actions/checkout@v3
         with:
-          repository: ${{ env.SOURCE_REPO }}
+          repository: ${{ env.SOURCE_REPOSITORY }}
           ref: main
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.PAT2 }}
           submodules: recursive
       - name: Setup Pages
         id: pages
