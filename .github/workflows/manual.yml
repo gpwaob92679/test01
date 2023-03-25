@@ -1,0 +1,12 @@
+name: On Push
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  print-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print github context
+        run: echo " ${{ toJSON(github) }} "
