@@ -1,0 +1,17 @@
+name: On Push
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  print-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize
+        run: mkdir output && cd output
+      - name: Print github context
+        run: echo " ${{ toJSON(github) }} " | tee github.txt
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./
