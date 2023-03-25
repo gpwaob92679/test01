@@ -1,5 +1,5 @@
 name: Deploy Hugo Site to Pages
-run-name: Deployment triggered by ${{ github.event.cliend_payload.run_name }}
+run-name: Deployment triggered by ${{ github.event.client_payload.run_name }}
 
 on:
   repository_dispatch:
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout source repository
         uses: actions/checkout@v3
         with:
-          repository: ${SOURCE_REPO}
+          repository: ${{ env.SOURCE_REPO }}
           ref: main
           token: ${{ secrets.PAT }}
           submodules: recursive
