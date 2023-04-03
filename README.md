@@ -17,10 +17,7 @@ content.
 ## h2
 
 > test quote  
-> with  
-
-
-
+> with
 > multiple  
 > 
 > lines  
