@@ -12,6 +12,7 @@ jobs:
         run: mkdir output && cd output
       - name: Print github context
         run: echo " ${{ toJSON(github) }} " | tee github.txt
+      - run: echo "$GITHUB_OUTPUT" && echo "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v3
         with:
           path: ./
